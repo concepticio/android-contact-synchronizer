@@ -30,8 +30,8 @@ class ContactSynchronization(val context: Context) {
       if (phoneNumber.isEmpty()) {
         continue
       }
-
-      phoneNumber.replace("[^0-9]", "")
+      //val regex = "[^0-9]".toRegex()
+      //phoneNumber = regex.find(phoneNumber)?.value
 
       // Look up key is a unique ID for Contact object in Phone table
 
@@ -41,10 +41,10 @@ class ContactSynchronization(val context: Context) {
       var contact = contactsMap[lookUpKey]
 
       if (contact == null) {
-        contact = Contact("", "", ArrayList())
+        contact = Contact("", "", mutableListOf())
         contactsMap[lookUpKey] = contact
       }
-      contact.phoneNumbers.plus(phoneNumber)
+      contact.phoneNumbers.add(phoneNumber)
 
     }
 
@@ -71,30 +71,28 @@ class ContactSynchronization(val context: Context) {
 
       contact?.let {
 
-        if (name.isEmpty() && lastName.isEmpty()){
-          if (name == null)
-            name = ""
-          if (lastName == null)
-            lastName = ""
-          val newContact = Contact(name,lastName,ArrayList())
-          newContact.phoneNumbers.plus(contact.phoneNumbers)
-          contactsMap[lookupKey] = newContact
-        }
+        if (name.isNullOrEmpty())
+          name = ""
+        if (lastName.isNullOrEmpty())
+          lastName = ""
+        val newContact = Contact(name, lastName, mutableListOf())
+        newContact.phoneNumbers.addAll(contact.phoneNumbers)
+        contactsMap[lookupKey] = newContact
 
       }
       val endTime = System.currentTimeMillis()
       val difference = endTime - startTime
-      Log.i("View",(difference/1000).toString() )
+      Log.i("View", (difference / 1000).toString())
 
-      for ((key,value) in contactsMap){
+      for ((key, value) in contactsMap) {
         val name = value.name
         val lastName = value.lastName
         var numbers = ""
-        for (i in value.phoneNumbers){
-          numbers +=i
+        for (i in value.phoneNumbers) {
+          numbers += i
         }
 
-        Log.i("User","name:$name, lastName:$lastName, numbers:$numbers")
+        Log.i("User", "name:$name, lastName:$lastName, numbers:$numbers")
       }
 
     }
