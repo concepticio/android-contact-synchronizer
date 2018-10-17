@@ -86,6 +86,17 @@ class ContactSynchronization(val context: Context) {
       val difference = endTime - startTime
       Log.i("View",(difference/1000).toString() )
 
+      for ((key,value) in contactsMap){
+        val name = value.name
+        val lastName = value.lastName
+        var numbers = ""
+        for (i in value.phoneNumbers){
+          numbers +=i
+        }
+
+        Log.i("User","name:$name, lastName:$lastName, numbers:$numbers")
+      }
+
     }
 
     userInfoCursor.close()
