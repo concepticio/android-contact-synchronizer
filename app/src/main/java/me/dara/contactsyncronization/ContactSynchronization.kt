@@ -1,8 +1,10 @@
 package me.dara.contactsyncronization
 
 import android.content.Context
+import android.os.SystemClock
 import android.provider.ContactsContract
 import android.util.Log
+import io.reactivex.subjects.PublishSubject
 
 /**
  * @author sardor
@@ -10,9 +12,30 @@ import android.util.Log
 class ContactSynchronization(val context: Context) {
 
 
-  fun start() {
+  val contactsSubject = PublishSubject.create<List<Contact>>()!!
 
-    val startTime = System.currentTimeMillis()
+
+  fun start() {
+    if (contactsSubject.hasObservers()) {
+
+      val startTime = SystemClock.elapsedRealtime()
+
+      val contactsMap = getContactsWithLookupKey()
+
+      val contactList = getContactList(contactsMap)
+
+      val endTime = SystemClock.elapsedRealtime()
+
+      val difference = endTime - startTime
+
+      contactsSubject.onNext(contactList)
+
+    } else {
+      throw Exception("Does not have any observables please subscribe at least one observer")
+    }
+  }
+
+  fun getContactsWithLookupKey(): HashMap<String, Contact> {
 
     val contactsMap = HashMap<String, Contact>()
 
@@ -49,7 +72,11 @@ class ContactSynchronization(val context: Context) {
     }
 
     userPhoneCursor.close()
+    return contactsMap
+  }
 
+  fun getContactList(contactsMap: HashMap<String, Contact>): List<Contact> {
+    val contactList = ArrayList<Contact>()
     val whereName = ContactsContract.Data.MIMETYPE + " = ?"
     val whereNameParams = arrayOf(ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
 
@@ -78,27 +105,13 @@ class ContactSynchronization(val context: Context) {
         val newContact = Contact(name, lastName, mutableListOf())
         newContact.phoneNumbers.addAll(contact.phoneNumbers)
         contactsMap[lookupKey] = newContact
-
+        contactList.add(newContact)
       }
-      val endTime = System.currentTimeMillis()
-      val difference = endTime - startTime
-      Log.i("View", (difference / 1000).toString())
-
-      for ((key, value) in contactsMap) {
-        val name = value.name
-        val lastName = value.lastName
-        var numbers = ""
-        for (i in value.phoneNumbers) {
-          numbers += i
-        }
-
-        Log.i("User", "name:$name, lastName:$lastName, numbers:$numbers")
-      }
-
     }
 
     userInfoCursor.close()
 
+    return contactList
 
   }
 

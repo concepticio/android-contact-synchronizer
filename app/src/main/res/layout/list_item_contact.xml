@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:padding="@dimen/spacing_tiny"
+      >
+
+    <ImageView
+        android:id="@+id/image_contact"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/linear_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/spacing_tiny"
+        app:layout_constraintLeft_toRightOf="@+id/image_contact"
+        app:layout_constraintStart_toEndOf="@+id/image_contact"
+        >
+
+      <TextView
+          android:id="@+id/text_name_contact"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          tools:text="Sardor Islomov"
+          android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+          />
+
+
+      <TextView
+          android:id="@+id/text_created_time_contact"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          tools:text="Created 1996"
+          />
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="0.5dp"
+      android:background="@android:color/darker_gray"
+      />
+
+</LinearLayout>
